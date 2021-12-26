@@ -110,6 +110,7 @@ class Counter extends Component {
 function App() {
   return (
     <div className="App">
+      {/* render props in Counter */}
       <Counter render={(counter) => <Message counter={counter} />} />
 
       <HelloGreating />
