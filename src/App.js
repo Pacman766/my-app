@@ -1,5 +1,5 @@
-import { Component } from 'react';
-
+import React, { Component } from 'react';
+import BootstrapTest from './BootstrapTest';
 import './App.css';
 
 class WhoAmI extends Component {
@@ -24,7 +24,7 @@ class WhoAmI extends Component {
   };
 
   commitInputChanges = (e, color) => {
-    console.log(color)
+    console.log(color);
     this.setState({
       position: e.target.value,
     });
@@ -34,7 +34,7 @@ class WhoAmI extends Component {
     const { name, surname, link } = this.props;
     const { position, years } = this.state;
 
-    console.log(this)
+    console.log(this);
 
     return (
       <div>
@@ -47,16 +47,45 @@ class WhoAmI extends Component {
         <a href={link}>My profile</a>
         <form>
           <span>Введите должность</span>
-          <input type="text" onChange={(e) => this.commitInputChanges(e, 'some color')} />
+          <input
+            type="text"
+            onChange={(e) => this.commitInputChanges(e, 'some color')}
+          />
         </form>
       </div>
     );
   }
 }
 
+const DynamicGreating = (props) => {
+  return (
+    <div className={'mb-3 p-3 border border-' + props.color}>
+      {React.Children.map(props.children, (child) => {
+        return React.cloneElement(child, {
+          className: 'shadow p-3 m-3 border rounded',
+        });
+      })}
+    </div>
+  );
+};
+
 function App() {
   return (
     <div className="App">
+      <BootstrapTest
+        left={
+          <DynamicGreating color={'primary'}>
+            <h2>This weel was hard</h2>
+            <h2>Hello world!</h2>
+          </DynamicGreating>
+        }
+        right={
+          <DynamicGreating color={'primary'}>
+            <h2>RIGHT!</h2>
+          </DynamicGreating>
+        }
+      />
+
       <WhoAmI name={'John'} surname="Smith" link="facebook.com" />
       <WhoAmI name={'Alex'} surname="Shepard" link="vk.com" />
     </div>
