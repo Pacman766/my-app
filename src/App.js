@@ -1,34 +1,39 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { Container } from 'react-bootstrap';
 import './App.css';
 
 class Form extends Component {
-  //   myRef = React.createRef();
-
-  //   componentDidMount() {
-  //     this.myRef.current.focus();
-  //   }
-
-  setInpuRef = (elem) => {
-    this.myRef = elem;
+  state = {
+    advOpen: false, // state for portal
   };
 
-  focusFirstTI = () => {
-    if (this.myRef) {
-      this.myRef.focus();
-    }
+  // opening portal after 3sec
+  componentDidMount() {
+    setTimeout(this.handleClick, 3000);
+  }
+
+  // setting opposit state for portal
+  handleClick = () => {
+    this.setState(({ advOpen }) => ({
+      advOpen: !advOpen,
+    }));
   };
 
   render() {
     return (
       <Container>
-        <form className="w-50 border mt-5 p-3 m-auto">
+        <form
+          // open and close portal on click
+          onClick={this.handleClick}
+          className="w-50 border mt-5 p-3 m-auto"
+          style={{ overflow: 'hidden', position: 'relative' }}
+        >
           <div className="mb-3">
             <label htmlFor="exampleFormControlInput1" className="form-label">
               Email address
             </label>
             <input
-              ref={this.setInpuRef}
               type="email"
               className="form-control"
               id="exampleFormControlInput1"
@@ -40,17 +45,48 @@ class Form extends Component {
               Example textarea
             </label>
             <textarea
-              onClick={this.focusFirstTI}
               className="form-control"
               id="exampleFormControlTextarea1"
               rows="3"
             ></textarea>
           </div>
+          {/* if advOpen - clicked - show portal */}
+          {this.state.advOpen ? (
+            <Portal>
+              <Msg />
+            </Portal>
+          ) : null}
         </form>
       </Container>
     );
   }
 }
+
+// create portal
+const Portal = (props) => {
+  const node = document.createElement('div');
+  document.body.appendChild(node);
+
+  return ReactDOM.createPortal(props.children, node);
+};
+
+// create msg in portal with styles
+const Msg = () => {
+  return (
+    <div
+      style={{
+        width: '500px',
+        height: '150px',
+        backgroundColor: 'red',
+        position: 'absolute',
+        right: '0',
+        bottom: '0',
+      }}
+    >
+      Hello
+    </div>
+  );
+};
 
 function App() {
   return <Form />;
